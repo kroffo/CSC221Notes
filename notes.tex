@@ -9,7 +9,7 @@
 \begin{document}
 
 \maketitle
-\tableofcontents
+\tableofcontents\pagebreak
 
 \section{Formal Languages}
 
@@ -63,7 +63,7 @@ $\Sigma^*=\{\lambda, a, b, aa, ab, ba, bb, ...\}$\\
 L is a language over $\Sigma$ that is defined recursively:
 ex: $L=\{w|w=a^nb^n, n\ge1\}$\\
 ($a^n$ means $aaa...a$ n times)\\
-Thus $L=\{ab, aabb, aaabbb, aaaabbbb, ...\}$, if $w \in L$, then $awb \in L$\\\\
+Thus $L=\{ab, aabb, aaabbb, aaaabbbb, ...\}$, if $w \in L$, then $awb \in L$\pagebreak
 
 \item Let $L_n={a^nb^n}$. Then $L = L_0 \cup L_1 \cup L_2 \cup ... $
 
@@ -98,7 +98,9 @@ A regex over $\Sigma$ is defined:
 
 \emph{Recursive}: If $u$ and $v$ are regex over $\Sigma$ then $u|v$, $uv$, and $u^*$ are all regex over $\Sigma$\\\\
 Here, $|$ means \emph{or} and $^*$ means 0 or more. When in doubt, use parentheses.\\\\
-grep - general regular expression parser - a Unix command which searches a file for a pattern defined by a regex.\\\\
+grep - general regular expression parser - a Unix command which searches a file for a pattern defined by a regex.
+
+\pagebreak
 Let $X=\{a,ab,aba\}$ and $Y=\{b,bb\}$. Then
 \begin{itemize}
 \item $XY=\{ab,abb,abb,abbb,abab,ababb\}$ (Concatenation)
@@ -119,7 +121,7 @@ Consider a vending machine which contains Jelly beans and Gum. The Machine has i
 \item D - 10 cents
 \item J - Jelly Bean (Costs 20 cents)
 \item G - Gum (Costs 15 cents)
-\end{itemize}\pagebreak
+\end{itemize}
 These can be represented by $\Sigma=\{N,D,J,G\}$. The machine also has outputs
 \begin{itemize}
 \item b - beep when money is added
@@ -138,9 +140,36 @@ States are drawn with circles and named on the inside:\\
 \includegraphics{./VMStateDiagram.png}\\
 \end{wrapfigure}
 
-For our Vending Machine the states are described by how much money is in the machine, and the transitions represent money input, or a purchase or gum or a jelly bean. The states live in the set $Q=\{GOT\emptyset,GOT5,GOT10,GOT15,GOT20\}$. State transitions are defined by a function $\delta: Q\times\Sigma\rightarrow Q$. As an example, 
+For our Vending Machine the states are described by how much money is in the machine, and the transitions represent money input, or a purchase or gum or a jelly bean. The states live in the set $Q=\{GOT\emptyset,GOT5,GOT10,GOT15,GOT20\}$.\\ State transitions are defined by a function $\delta: Q\times\Sigma\rightarrow Q$. As an example, 
 \begin{displaymath}
 (GOT5)(N) \rightarrow GOT10 
 \end{displaymath}
+
+Here is an example of a state transition diagram.
+
+\subsection{Finite State machine}
+A finite state machine has one or more states. For the vending machine in the previous section the inital and final states happen to be the same. Any \underline{path} in the state transition diagram is called a \underline{computation}. Any path in a finite state machine which starts in the initial state and ends in the final state is called an \emph{acceptable} path.\\
+
+A finite state machine must have:
+\begin{itemize}
+\item An input mechanism
+\item A computing mechanism
+\item An output mechanism
+\end{itemize}
+
+We use ordered pairs to reference what has happened in the fsm. Referring back to the vending machine, here is an example:\\\\
+$(GOT5,NNNDG)\rightarrow(GOT10,NNDG)\rightarrow(GOT15,NDG)\rightarrow(GOT20,DG)\rightarrow$\\
+$(GOT20,G)\rightarrow(GOT\emptyset,\lambda)$\\
+
+The first part of the pair represents the current state while the second represents the input. Each pair is called an \emph{instantaneous configuration}.
+
+A finite state machine is defined by a 5-tuple: $M=(Q,\Sigma,\delta,q_0,F)$:
+\begin{itemize}
+\item $Q$: finite, nonempty set of states
+\item $\Sigma$: alphabet (finite, nonempty set of symbols
+\item $\delta$: $Q\times\Sigma\rightarrow Q$ is the state transition function
+\item $q_0$: initial state
+\item $F\subset Q$ : set of final states
+\end{itemize}
 
 \end{document}
