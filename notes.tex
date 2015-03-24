@@ -1,5 +1,5 @@
 \documentclass{scrartcl}
-\usepackage{amsmath,amssymb,graphicx,wrapfig,ulem}
+\usepackage{amsmath,amssymb,graphicx,wrapfig,ulem,qtree}
 \setkomafont{disposition}{\normalfont\bfseries}
 
 \title{Foundations of Computer Science}
@@ -188,16 +188,70 @@ Consider this classic problem:\\
 
 A man once had to travel with a wolf, a goat and a cabbage. He had to take good care of them, since the wolf would like to taste a.piece of goat if he would get the chance, while the goat appeared to long for a tasty cabbage. After some traveling, he suddenly stood before a river. This river could only be crossed using the small boat laying nearby at a shore. The boat was only good enough to take himself and one of his loads across the river. The other two subjects/objects he had to leave on their own. How must the man row across the river back and forth, to take himself as well as his luggage safe to the other side of the river, without having one eating another? \\
 
-A table can be constructed similar to show the possible different states. States that are not allowed are crossed out.
+A table can be constructed similar to show the possible different states. States that are not allowed are crossed out. The route I chose to take is in bold, and the next possible states from there are listed on the next line. Note that there are infinitely many solutions. I chose my solution as it seemed the most logical to me on the fly.
 
 \begin{center}
 \begin{tabular} { |c|c c c c| }
 \hline
 &M&W&G&C\\
 \hline
-MWGC-&WGC-M&\sout{GC-MW}&WC-MG&\sout{WG-MC}\\
-WC-MG&MWC-G&X&X&MWGC-\\
+MWGC-&WGC-M&\sout{GC-MW}&\textbf{WC-MG}&\sout{WG-MC}\\
+WC-MG&\textbf{MWC-G}&X&MWGC-&X\\
+MWC-G&WC-MG&C-MWG&X&\textbf{W-MGC}\\
+W-MGC&\sout{MW-GC}&X&\textbf{MWG-C}&MWC-G\\
+MWG-C&\sout{WG-MC}&\textbf{G-MWC}&W-MGC&X\\
+G-MWC&\textbf{MG-WC}&MWG-C&X&MGC-W\\
+MG-WC&G-MWC&X&\textbf{-MWGC}&X\\
+\hline
+\end{tabular}
+\end{center}\pagebreak
+
+\subsection{Examples}
+Let $\Sigma=\{a,b\}$. Dsign a finite state machine that accepts all strings over $\Sigma$ that contain the substring $bab$:\\
+
+Regular Expression: $(a|b)^*bab(a|b)^*$
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta$&$a$&$b$\\
+\hline
+$q_0$&$q_0$&$q_0,q_1$\\
+$q_1$&$q_2$&...\\
+$q_2$&...&$q_3$\\
+$q_3$&$q_3$&$q_3$\\
 \hline
 \end{tabular}
 \end{center}
+
+As seen in the table, if the state is $q_0$ and the input is $a$, then the machine has two options. We call this non-deterministic, and thus we call the machine a \emph{non-deterministic finite state machine}. Let $M$ be a non-deterministic finite state machine: Then $$M=(Q,\Sigma,q,\delta,F)$$ where $$\delta : Q \times \Sigma \rightarrow P(Q)$$ Recall that $P(S)$ is the power set of $S$. An alternate way of making the table above would be:
+
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta$&$a$&$b$\\
+\hline
+$q_0$&$\{q_0\}$&$\{q_0,q_1\}$\\
+$q_1$&$\{q_2\}$&$\emptyset$\\
+$q_2$&$\emptyset$&$\{q_3\}$\\
+$q_3$&$\{q_3\}$&$\{q_3\}$\\
+\hline
+\end{tabular}
+\end{center}
+
+%We want to turn this in to a deterministic finite state machine. Let's keep track of all possible moves of our machine on the string $ababa$% using a tree:
+%\Tree
+%    [q_0 
+%        [q_0
+%            [q_0
+%                [q_0
+%                    [q_0 q_0]
+%                    [q_1 q_2]
+%                ] 
+%            ]
+%            [q_1
+%                [q_2 [q_3 [q_3]]]
+%            ] 
+%        ]
+%    ]
+%
 \end{document}
