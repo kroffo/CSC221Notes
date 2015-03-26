@@ -180,10 +180,8 @@ A Turing Machine is a machine that can solve any computable problem. In other wo
 
 The Wikipedia definition of a Turing machine:
 
- \emph{A \textbf{Turing machine} is a hypothetical device that manipulates symbols on a strip of tape according to a table of rules. Despite its simplicity, a Turing machine can be adapted to simulate the logic of any computer algorithm, and is particularly useful in explaining the functions of a CPU inside a computer.}
-
-\subsubsection{The Man, the Wolf, the Goat and the Cabbage}
-
+ \emph{A \textbf{Turing machine} is a hypothetical device that manipulates symbols on a strip of tape according to a table of rules. Despite its simplicity, a Turing machine can be adapted to simulate the logic of any computer algorithm, and is particularly useful in explaining the functions of a CPU inside a computer.}\\\\
+\textbf{The Man, the Wolf, the Goat and the Cabbage}\\\\
 Consider this classic problem:\\
 
 A man once had to travel with a wolf, a goat and a cabbage. He had to take good care of them, since the wolf would like to taste a.piece of goat if he would get the chance, while the goat appeared to long for a tasty cabbage. After some traveling, he suddenly stood before a river. This river could only be crossed using the small boat laying nearby at a shore. The boat was only good enough to take himself and one of his loads across the river. The other two subjects/objects he had to leave on their own. How must the man row across the river back and forth, to take himself as well as his luggage safe to the other side of the river, without having one eating another? \\
@@ -206,8 +204,8 @@ MG-WC&G-MWC&X&\textbf{-MWGC}&X\\
 \end{tabular}
 \end{center}\pagebreak
 
-\subsection{Examples}
-Let $\Sigma=\{a,b\}$. Dsign a finite state machine that accepts all strings over $\Sigma$ that contain the substring $bab$:\\
+\subsection{Non-deterministic Finite State Machines}
+Let $\Sigma=\{a,b\}$. Design a finite state machine that accepts all strings over $\Sigma$ that contain the substring $bab$:\\
 
 Regular Expression: $(a|b)^*bab(a|b)^*$
 \begin{center}
@@ -223,7 +221,7 @@ $q_3$&$q_3$&$q_3$\\
 \end{tabular}
 \end{center}
 
-As seen in the table, if the state is $q_0$ and the input is $a$, then the machine has two options. We call this non-deterministic, and thus we call the machine a \emph{non-deterministic finite state machine}. Let $M$ be a non-deterministic finite state machine: Then $$M=(Q,\Sigma,q,\delta,F)$$ where $$\delta : Q \times \Sigma \rightarrow P(Q)$$ Recall that $P(S)$ is the power set of $S$. An alternate way of making the table above would be:
+As seen in the table, if the state is $q_0$ and the input is $a$, then the machine has two options. We call this non-deterministic, and thus we call the machine a \emph{non-deterministic finite state machine}. Let $M$ be a non-deterministic finite state machine: Then $$M=(Q,\Sigma,q,\delta,F)$$ where $$\delta : Q \times \Sigma \rightarrow \rho(Q)$$ Recall that $\rho(S)$ is the power set of $S$. An alternate way of making the table above would be:
 
 \begin{center}
 \begin{tabular} {|c|c c|}
@@ -238,6 +236,55 @@ $q_3$&$\{q_3\}$&$\{q_3\}$\\
 \end{tabular}
 \end{center}
 
+We define a new function, $\delta' : \rho(q)\times\Sigma\rightarrow\rho(Q)$
+
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta_1$&$a$&$b$\\
+\hline
+$\{q_0\}$&$\{q_0\}$&$\{q_0,q_1\}$\\
+$\{q_0,q_1\}$&$\{q_0,q_2\}$&$\{q_0,q_1\}$\\
+$\{q_0,q_2\}$&$\{q_0\}$&$\{q_0,q_1,q_3\}$\\
+$\{q_0,q_1,q_3\}$&$\{q_0,q_2,q_3\}$&$\{q_0,q_1,q_3\}$\\
+$\{q_0,q_2,q_3\}$&$\{q_0,q_3\}$&$\{q_0,q_1,q_3\}$\\
+$\{q_0,q_3\}$&$\{q_0,q_3\}$&$\{q_0,q_1,q_3\}$\\
+\hline
+\end{tabular}
+\end{center}
+
+The sets on the left are determined as the table is constructed based on what appears on the right. Now we let
+\begin{align*}
+\{q_0\} &= 0\\
+\{q_0,q_1\} &= 01\\
+\{q_0,q_2\} &= 02\\
+\{q_0,q_1,q_3\} &= 013\\
+\{q_0,q_2,q_3\} &= 023\\
+\{q_0,q_3\} &= 03\\
+\end{align*}
+Then our machine becomes $M'(Q',\Sigma,\delta',0,F)$ with
+\begin{align*}
+Q'&=\{0,01,02,013,023,03\}\\
+\Sigma&=\{a,b\}\\
+\delta' &: \rho(Q)\times\Sigma\rightarrow \rho(Q)\\
+F&=\{013,023,03\}
+\end{align*}
+
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta'$&$a$&$b$\\
+\hline
+0& 0 & 01\\
+01& 02 & 01\\
+02& 0 & 013 \\
+013& 023 & 013\\
+023 & 03 & 013\\
+03 & 03 & 013\\
+\hline
+\end{tabular}
+\end{center}
+This may feel a little uneasy at first, but we now have a deterministic finite state machine (DFA).
 %We want to turn this in to a deterministic finite state machine. Let's keep track of all possible moves of our machine on the string $ababa$% using a tree:
 %\Tree
 %    [q_0 
