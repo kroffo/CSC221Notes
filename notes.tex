@@ -301,4 +301,151 @@ This may feel a little uneasy at first, but we now have a deterministic finite s
 %        ]
 %    ]
 %
+\pagebreak
+\subsection{Converting NFA to DFA with $\epsilon$ moves}
+
+To convert an NFA to a DFA we will compute the $\epsilon$-closure of every state.\\
+
+$\epsilon$-moves are moves without any input.
+
+$\epsilon-c(q) \equiv \{s|s \text{ can be reached from } q \text{ by an $\epsilon$-move}\}$\\
+
+Consider the NFA with $\epsilon$-moves:
+\begin{center}
+\begin{tabular} {|c|c c c|}
+\hline
+$\delta$&0&1&$\epsilon$\\
+\hline
+$q_0$ & $\emptyset$ & $\emptyset$ & $\{e0,e1\}$\\
+$e0$ & $\{o0\}$ & $\{e0\}$ & $\emptyset$\\
+$e1$ & $\{e1\}$ & $\{o1\}$ & $\emptyset$\\
+$o0$ & $\{e0\}$ & $\{o0\}$ & $\emptyset$\\
+$o1$ & $\{o1\}$ & $\{e1\}$ & $\emptyset$\\
+\hline
+\end{tabular}
+\end{center}
+
+We will find the $\epsilon$-closure of every state:
+\begin{align*}
+\epsilon-c(q_0) &= \{q_0,e0,e1\}\\
+\epsilon-c(e0) &= \{e0\}\\
+\epsilon-c(e1) &= \{e1\}\\
+\epsilon-c(o0) &= \{o0\}\\
+\epsilon-c(o1) &= \{o1\}\\
+\end{align*}
+
+Now we construct $\delta'$ with NFA$\rightarrow$ DFA except add $\epsilon$-closures of all resulting states.
+
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta'$&$0$&$1$\\
+\hline
+$\{q_0,e0,e1\}$ & $\{o0,e1\}$ & $\{e0,o1\}$\\
+$\{o0,e1\}$ & $\{e0,e1\}$ & $\{o0,o1\}$\\
+$\{e0,o1\}$ & $\{o0,o1\}$ & $\{e0,e1\}$\\
+$\{e0,e1\}$ & $\{o0,e1\}$ & $\{e0,o1\}$\\
+$\{o0,o1\}$ & $\{e0,01\}$ & $\{o0,e1\}$\\
+\hline
+\end{tabular}
+\end{center}
+Now we define:
+\begin{align*}
+\{q_0,e_1,e_0\} &= i\\
+\{o0,e1\} &= o0e1\\
+\{e0,o1\} &= e0o1 \text{  and so on...}\\
+\end{align*}
+
+The DFA is now
+
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta'$&$0$&$1$\\
+\hline
+$i$ & $o0e1$ & $e0o1$\\
+$o0e1$ & $e0e1$ & $o0o1$\\
+$e0o1$ & $o0o1$ & $e0e1$\\
+$e0e1$ & $o0e1$ & $e0o1$\\
+$o0o1$ & $e001$ & $o0e1$\\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Sequential Machines}
+Sequential machines have outputs, like our vending machine.\\
+State transition: $\delta(p,a)=q$ \ \ $\delta : Q \times \Sigma \rightarrow Q$\\
+$\Sigma$ is an input alphabet\\
+$\epsilon(p,a)=o$, $p$ is the state, $a$ is the input symbol, $o$ is the output symbol\\
+
+\underline{Sequential Machine}:
+\begin{itemize}
+\item $Q$: Set of states
+\item $\Sigma$: input alphabet
+\item $\Delta$: output alphabet
+\item $\delta:\ Q\times\Sigma\rightarrow Q$: state transition function
+\item $\epsilon: Q\times\Sigma\rightarrow\Delta$: output function
+\item $q_0$: initial state
+\end{itemize}\ \\
+\textbf{Ex}:\\\\
+$M=(Q,\Sigma,\Delta,\delta,\epsilon,q_0)$\\
+$Q=\{A,B,C,D,E,F\}$\\
+$\Sigma=\{0,1\}$\\
+$\delta:\ Q\times\Sigma\rightarrow Q$\\
+$q_0=A$\\
+$\Delta=\{0,1\}$\\
+$\epsilon:\ Q\times\Sigma\rightarrow\Delta$\\\\
+\begin{minipage}{0.45\linewidth}\centering
+\begin{tabular} {|c|c c|}
+\hline
+$\delta$&$0$&$1$\\
+\hline
+$A$ & $E$ & $D$\\
+$B$ & $F$ & $D$\\
+$C$ & $E$ & $B$\\
+$D$ & $F$ & $B$\\
+$E$ & $C$ & $F$\\
+$F$ & $B$ & $C$\\
+\hline
+\end{tabular}
+\end{minipage}
+\begin{minipage}{0.45\linewidth}\centering
+\begin{tabular} {|c|c c|}
+\hline
+$\epsilon$&$0$&$1$\\
+\hline
+$A$ & $0$ & $1$\\
+$B$ & $0$ & $0$\\
+$C$ & $0$ & $1$\\
+$D$ & $0$ & $0$\\
+$E$ & $0$ & $1$\\
+$F$ & $0$ & $0$\\
+\hline
+\end{tabular}
+\end{minipage}
+
+We can combine these two functions:\\
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta,\epsilon$&$0$&$1$\\
+\hline
+$A$ & $E,0$ & $D,1$\\
+$B$ & $F,0$ & $D,0$\\
+$C$ & $E,0$ & $B,1$\\
+$D$ & $F,0$ & $B,0$\\
+$E$ & $C,0$ & $F,1$\\
+$F$ & $B,0$ & $C,0$\\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Question: } How do we determine if a sequential machine is minimal?\\
+
+\textbf{Answer: } We use a sequence of partitions.
+\begin{align*}
+\Pi_0&:\ [A\ B\ C\ D\ E\ F]\\
+\Pi_1&:\ [A\ C\ E]\ [B\ D\ F]\\
+\end{align*}
+We look at the input and output sequences. Two states, $S_1$ and $S_2$ are distinguishable if there is a finite input sequence that causes a different output sequence, depending on whether we use $S_1$ or $S_2$.
 \end{document}
