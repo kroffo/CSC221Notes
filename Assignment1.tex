@@ -1,0 +1,52 @@
+\documentclass{scrartcl}
+\usepackage{amsmath,amssymb,graphicx,wrapfig,ulem,qtree}
+\setkomafont{disposition}{\normalfont\bfseries}
+
+\title{Foundations of Computer Science}
+\subtitle{Assignment 1}
+\author{Kenny Roffo, Wesam Shanaa, Sarah Haber, Kevin Taylor}
+
+\begin{document}
+
+\maketitle
+
+\textbf{Assignment}: Design a Mealy machine which outputs a 1 every time the sequence 0101 is detected, and outputs a 0 at other times:\\
+
+Example:
+
+input sequence: 0 1 0 1 0 1 0 0 1 0 1
+
+output sequence: 0 0 0 1 0 1 0 0 0 0 1\\
+
+%Make picture of diagram
+
+1. Description of design approach:
+
+We defined an initial state where we have no record of previous inputs, and created states named according to input history the states represent. From there we realized it would be convenient to move from the 010 state not to the intial again, but to the 01 state (upon an input of 1) since the sequence 0101 could potentially lead to a second 0101 after two more inputs. This design was simple and easy to come up with.\\
+\\
+2. Specify the 6-tuple: $M(Q,\Sigma,\Delta,\delta,\epsilon,q_0)$
+\begin{align*}
+Q&=\{i,0,01,010\}\\
+\Sigma&=\{0,1\}\\
+\Delta&=\{0,1\}\\
+q_0&=i\\
+\delta&:Q \times \Sigma \rightarrow Q\\
+\epsilon&: Q \times \Sigma \rightarrow \Delta
+\end{align*}\ \\
+
+3.
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta,\epsilon$&$0$&$1$\\
+\hline
+$i$&$0,0$&$i,0$\\
+$0$&$i,0$&$01,0$\\
+$01$&$010,0$&$i,0$\\
+$010$&$i,0$&$01,1$\\
+\hline
+\end{tabular}
+\end{center}\ \\
+
+4. This design is simple, efficient and easy to understand; it is also minimal. For these reasons, we are confident that this design is justified.
+\end{document}

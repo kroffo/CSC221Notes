@@ -166,7 +166,7 @@ The first part of the pair represents the current state while the second represe
 A finite state machine is defined by a 5-tuple: $M=(Q,\Sigma,\delta,q_0,F)$:
 \begin{itemize}
 \item $Q$: finite, nonempty set of states
-\item $\Sigma$: alphabet (finite, nonempty set of symbols
+\item $\Sigma$: alphabet (finite, nonempty set of symbols)
 \item $\delta$: $Q\times\Sigma\rightarrow Q$ is the state transition function
 \item $q_0$: initial state
 \item $F\subset Q$ : set of final states
@@ -284,7 +284,53 @@ $\delta'$&$a$&$b$\\
 \hline
 \end{tabular}
 \end{center}
-This may feel a little uneasy at first, but we now have a deterministic finite state machine (DFA).
+This may feel a little uneasy at first, but we now have a deterministic finite state machine (DFA).\pagebreak
+
+\subsection{Minimizing a DFA}
+We have a method for ensuring our DFA is minimal. Let's show this by an example. Consider the DFA from the end of the previous subsection:\\
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta'$&$a$&$b$\\
+\hline
+0& 0 & 01\\
+01& 02 & 01\\
+02& 0 & 013 \\
+013& 023 & 013\\
+023 & 03 & 013\\
+03 & 03 & 013\\
+\hline
+\end{tabular}
+\end{center}\ \\
+This DFA is not minimal, so we start by making a partition of the states. One set will be the final states, and the other set will be the rest of the states:
+$$\Pi_0:\ ^A[0\ 01\ 02]\ ^B[013\ 023\ 03]$$
+From here we look at which sets each element maps to. For example, when the inputs are $a$ and $b$, the outputs are elements of the sets $A$ and $A$ for 0, $A$ and $A$ for 01, $A$ and $B$ for 02, etc. Since 0 and 01 map to the same sets for both inputs, they will stay together. However, 02 will branch off into its own set, called a singleton. Note that if elements of $A$ have the same mappings as elements of $B$ they do not become members of the same set at the next level of the process since they came from different sets. This means the next step gives:
+$$\Pi_1:\ ^C[0\ 01]\ ^D[02]\ ^E[013\ 023\ 03]$$
+We now execute the process again to have:
+$$\Pi_2:\ ^F[0]\ ^G[01]\ ^H[02]\ ^I[013\ 023\ 03]$$
+Finally, we will do this one last time to see that $\Pi_3=\Pi_2$, and thus the process no longer reduces the partition:
+$$\Pi_3:\ ^F[0]\ ^G[01]\ ^H[02]\ ^I[013\ 023\ 03]$$
+Now we define:
+\begin{align*}
+0&=F\\
+01&=G\\
+02&=H\\
+0123&=I
+\end{align*}
+And define our minimal finite state machine:
+\begin{center}
+\begin{tabular} {|c|c c|}
+\hline
+$\delta$&$a$&$b$\\
+\hline
+0& 0 & 01\\
+01& 02 & 01\\
+02& 0 & 0123 \\
+0123& 0123 & 0123\\
+\hline
+\end{tabular}
+\end{center}\ \\
+
 %We want to turn this in to a deterministic finite state machine. Let's keep track of all possible moves of our machine on the string $ababa$% using a tree:
 %\Tree
 %    [q_0 
@@ -301,7 +347,6 @@ This may feel a little uneasy at first, but we now have a deterministic finite s
 %        ]
 %    ]
 %
-\pagebreak
 \subsection{Converting NFA to DFA with $\epsilon$ moves}
 
 To convert an NFA to a DFA we will compute the $\epsilon$-closure of every state.\\
@@ -354,7 +399,7 @@ Now we define:
 \{q_0,e_1,e_0\} &= i\\
 \{o0,e1\} &= o0e1\\
 \{e0,o1\} &= e0o1 \text{  and so on...}\\
-\end{align*}
+\end{align*}\ \\\ \\
 
 The DFA is now
 
@@ -422,7 +467,7 @@ $E$ & $0$ & $1$\\
 $F$ & $0$ & $0$\\
 \hline
 \end{tabular}
-\end{minipage}
+\end{minipage}\\
 
 We can combine these two functions:\\
 \begin{center}
@@ -447,5 +492,7 @@ $F$ & $B,0$ & $C,0$\\
 \Pi_0&:\ [A\ B\ C\ D\ E\ F]\\
 \Pi_1&:\ [A\ C\ E]\ [B\ D\ F]\\
 \end{align*}
-We look at the input and output sequences. Two states, $S_1$ and $S_2$ are distinguishable if there is a finite input sequence that causes a different output sequence, depending on whether we use $S_1$ or $S_2$.
+We look at the input and output sequences. Two states, $S_1$ and $S_2$ are distinguishable if there is a finite input sequence that causes a different output sequence, depending on whether we use $S_1$ or $S_2$. We make the first partition (from $\Pi_0$ to $\Pi_1$) by comparing the outputs, which come from $\Delta$. In the above example, $A,\ C$ and $E$ ouptut $0$ and $1$ when the input is $0$ and $1$ respectively, so they are grouped together. However, $B,\ D$ and $F$ output $0$ and $0$ when the input is $0$ and $1$ respectively, so they are grouped together. From here we can partition the groups by the same method as for a DFA.
+
+
 \end{document}
