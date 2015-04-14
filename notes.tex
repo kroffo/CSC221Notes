@@ -492,7 +492,63 @@ $F$ & $B,0$ & $C,0$\\
 \Pi_0&:\ [A\ B\ C\ D\ E\ F]\\
 \Pi_1&:\ [A\ C\ E]\ [B\ D\ F]\\
 \end{align*}
-We look at the input and output sequences. Two states, $S_1$ and $S_2$ are distinguishable if there is a finite input sequence that causes a different output sequence, depending on whether we use $S_1$ or $S_2$. We make the first partition (from $\Pi_0$ to $\Pi_1$) by comparing the outputs, which come from $\Delta$. In the above example, $A,\ C$ and $E$ ouptut $0$ and $1$ when the input is $0$ and $1$ respectively, so they are grouped together. However, $B,\ D$ and $F$ output $0$ and $0$ when the input is $0$ and $1$ respectively, so they are grouped together. From here we can partition the groups by the same method as for a DFA.
+We look at the input and output sequences. Two states, $S_1$ and $S_2$ are distinguishable if there is a finite input sequence that causes a different output sequence, depending on whether we use $S_1$ or $S_2$. We make the first partition (from $\Pi_0$ to $\Pi_1$) by comparing the outputs, which come from $\Delta$. In the above example, $A,\ C$ and $E$ ouptut $0$ and $1$ when the input is $0$ and $1$ respectively, so they are grouped together. However, $B,\ D$ and $F$ output $0$ and $0$ when the input is $0$ and $1$ respectively, so they are grouped together. From here we can partition the groups by the same method as for a DFA.\pagebreak
 
+\section{Context Free Grammars}
+Let's start with simple english. Consider the sentence:\\
 
+The girl sees a dog.\\
+
+We can \emph{parse} this sentence into its constituent phrases:\\
+``The girl'' can is a noun phrase, and ``sees a dog'' is a verb phrase. However, these phrases can be broken up further. ``The'' is a determiner. ``girl'' is a common noun. Also, ``sees'' is a transitive verb, and ``a dog'' is a noun phrase, with ``a'' being a determiner and ``dog'' being a common noun.\\
+
+We can say a $<$sentence$>$ consits of a $<$noun phrase$>$ followed by a $<$verb phrase$>$.\\
+\begin{align*}
+S   &\rightarrow NP\ VP\\
+NP  &\rightarrow DET\ CN\\
+NP  &\rightarrow PN\\
+VP  &\rightarrow TV\ NP\\
+VP  &\rightarrow IV\\
+VP  &\rightarrow IV\ ADV\\
+CN  &\rightarrow girl|boy|dog|...\\
+PN  &\rightarrow Jack|Jill|...\\
+DET &\rightarrow a|the|every|...\\
+TV  &\rightarrow sees|likes|...\\
+IV  &\rightarrow runs|walks|...\\
+ADV &\rightarrow quickly|slowly|...
+\end{align*}
+
+These are called rewrite rules, or production rules, or grammar. They are our syntax for the English Language.
+\begin{itemize}
+\item Syntactic Categories of Grammar $$S,NP,VP,CN,PN,DET,TV,IV,ADV$$
+\item Lexical Items (Lexicon, Terminal Symbols)
+\end{itemize}
+
+Grammar Rules can be used in two different ways:
+\begin{enumerate}
+\item Parse a given sentence into its constituents.
+\item Generate or derive a setence using production rules.
+\end{enumerate}
+
+Given a set of grammar rules we can derive some particular string of all terminal symbols:
+\begin{align*}
+S &\implies NP\ VP\\
+  &\implies PN\ VP\\
+  &\implies Jack\ VP\\
+  &\implies Jack\ IV\ ADV\\
+  &\implies Jack\ walks\ ADV\\
+  &\implies Jack\ walks\ slowly
+\end{align*}
+
+\textbf{Context}:
+
+Def: We have some string $uAv$ where $u$ is a prefix of $A$, and $v$ is a suffix of $A$. $u$ and $v$ define the context, or environment of $A$.
+
+$A$ (now without $u$ and $v$) is context-free. There is no prefix or suffix of $A$ which would establish a context for $A$.\\
+
+\textbf{Programming Languages are context-free}\centering
+
+Consider a mathematical expression: $(x+y)\times3$\\
+$$E\rightarrow E\times E | E + E | (E) | number | x | y$$
+These are all expressions.
 \end{document}
