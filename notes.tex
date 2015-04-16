@@ -1,5 +1,7 @@
 \documentclass{scrartcl}
 \usepackage{amsmath,amssymb,graphicx,wrapfig,ulem,qtree}
+\usepackage{tikz}
+\usetikzlibrary{trees}
 \setkomafont{disposition}{\normalfont\bfseries}
 
 \title{Foundations of Computer Science}
@@ -544,11 +546,77 @@ S &\implies NP\ VP\\
 
 Def: We have some string $uAv$ where $u$ is a prefix of $A$, and $v$ is a suffix of $A$. $u$ and $v$ define the context, or environment of $A$.
 
-$A$ (now without $u$ and $v$) is context-free. There is no prefix or suffix of $A$ which would establish a context for $A$.\\
+$A$ (now without $u$ and $v$) is context-free. There is no prefix or suffix of $A$ which would establish a context for $A$.
 
-\textbf{Programming Languages are context-free}\centering
-
+\begin{center}
+\textbf{Programming Languages are context-free}
+\end{center}
 Consider a mathematical expression: $(x+y)\times3$\\
 $$E\rightarrow E\times E | E + E | (E) | number | x | y$$
-These are all expressions.
+This is the definition of an expression (represented by $E$).
+
+Consider the expression $a\times b + c$.\\\ \\
+\begin{minipage}{0.45\linewidth}
+\begin{center}
+\begin{tikzpicture}%[level distance=1.5cm,
+%  level 1/.style={sibling distance=3cm},
+%  level 2/.style={sibling distance=1.5cm}]
+  \node {E}
+    child {node {$E$}
+      child {node {$E$}
+        child {node {$a$}}
+        child {node {$\times$}}
+        child {node {$b$}}
+      }
+    }
+    child {node {+}
+    }
+    child {node {$E$}
+      child {node {$c$}}
+    };
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\begin{center}
+\begin{align*}
+E&\rightarrow E+T|E-T|T\\
+T&\rightarrow F\times T|T\\
+F&\rightarrow (E)|a|b|c
+\end{align*}
+\end{center}
+\end{minipage}
+
+\ \\We will now define not only expressions, but terms ($T$) and factors ($F$). 
+These are a clever way of dealing with the order of operations. It's actually quite beautiful.
+The ``things'' which are most specific are ``done'' first. In other words, since $F$ is the most specific, all factors will always be dealt with first. Then terms, and then expressions. Since expressions become factors (the most specific) by putting them in parentheses, this is how we can see that parentheses truly make their contents be evaluated first.
+\begin{center}
+\begin{tikzpicture}
+  \node {E}
+    child {node {$T$}
+      child {node {$E$}
+        child {node {$F$}
+          child {node {$a$}}
+        }
+        child {node {$\times$}}
+        child {node {$T$}
+          child{node {$F$}
+            child{node {$b$}}
+          }
+        }
+      }
+    }
+    child {node {+}
+    }
+    child {node {$E$}
+      child {node {$T$}
+        child {node {$F$}
+          child {node {$c$}}
+        }
+      }
+    };
+\end{tikzpicture}
+\end{center}
+
+We can think of the compiler reading an expression as right recursive (but beware, not all compilers are right recursive. It is best to always use parentheses). By right recursion we mean that the reading of the expression will end up being right to left. To try and explain through text, you can look at the definition of $T$ above. Every factor is determined, and the term must be determined before the multiplication is carried out. This means in $a*b*c$ we have the factor $a$ ``waiting'' for the term $b*c$ to be determined before anything else happens.
 \end{document}
