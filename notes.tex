@@ -1,7 +1,7 @@
 \documentclass{scrartcl}
 \usepackage{amsmath,amssymb,graphicx,wrapfig,ulem,qtree}
 \usepackage{tikz}
-\usetikzlibrary{trees}
+\usetikzlibrary{trees,arrows,automata}
 \setkomafont{disposition}{\normalfont\bfseries}
 
 \title{Foundations of Computer Science}
@@ -138,17 +138,51 @@ This vending machine has to ``remember'':
 \end{itemize}
 States are drawn with circles and named on the inside:\\
 
-\begin{wrapfigure}[15]{r}[12pt]{3in}
-\includegraphics{./VMStateDiagram.png}\\
-\end{wrapfigure}
-
+%\begin{wrapfigure}[15]{r}[12pt]{3in}
+%\includegraphics{./VMStateDiagram.png}\\
+%\end{wrapfigure}
+\begin{minipage}{0.45\linewidth}
 For our Vending Machine the states are described by how much money is in the machine, and the transitions represent money input, or a purchase or gum or a jelly bean. The states live in the set $Q=\{GOT\emptyset,GOT5,GOT10,GOT15,GOT20\}$.\\ State transitions are defined by a function $\delta: Q\times\Sigma\rightarrow Q$. As an example, 
 \begin{displaymath}
 (GOT5)(N) \rightarrow GOT10 
 \end{displaymath}
 
 Here is an example of a state transition diagram.
+\end{minipage}
+\begin{minipage}{0.45\linewidth}\centering
+\begin{tikzpicture}
+        [
+            > = stealth, % arrow head style
+            shorten > = 1pt, % don't touch arrow head to node
+            auto,
+            node distance = 3cm, % distance between nodes
+            semithick % line style
+        ]
+        \tikzstyle{every state}=[
+            draw = black,
+            thick,
+            fill = white,
+            minimum size = 4mm
+        ]
 
+        \node[state] (A) {GOT $\emptyset$};
+        \node[state] (B) [above right of=A] {GOT $5$};
+        \node[state] (C) [below right of=A] {GOT $10$};
+        \node[state] (D) [right of=B] {GOT $15$};
+        \node[state] (E) [right of=C] {GOT $20$};
+
+        \path[->] (A) edge node {$N/b$} (B);
+        \path[->] (A) edge node {$D/b$} (C);
+        \path[->] (B) edge node {$N/b$} (C);
+        \path[->] (B) edge node {$D/b$} (D);
+        \path[->, bend right=10] (C) edge node {$N/b$} (D);
+        \path[->] (C) edge node {$D/b$} (E);
+        \path[->] (D) edge node {$N/b$} (E);
+        \path[->, bend left=90] (E) edge node {$J/j$} (A);
+        \path[->, bend right=90] (D) edge node {$G/g$} (A);
+
+    \end{tikzpicture}
+\end{minipage}
 \subsection{Finite State machine}
 A finite state machine has one or more states. For the vending machine in the previous section the inital and final states happen to be the same. Any \underline{path} in the state transition diagram is called a \underline{computation}. Any path in a finite state machine which starts in the initial state and ends in the final state is called an \emph{acceptable} path.\\
 
@@ -497,6 +531,7 @@ $F$ & $B,0$ & $C,0$\\
 We look at the input and output sequences. Two states, $S_1$ and $S_2$ are distinguishable if there is a finite input sequence that causes a different output sequence, depending on whether we use $S_1$ or $S_2$. We make the first partition (from $\Pi_0$ to $\Pi_1$) by comparing the outputs, which come from $\Delta$. In the above example, $A,\ C$ and $E$ ouptut $0$ and $1$ when the input is $0$ and $1$ respectively, so they are grouped together. However, $B,\ D$ and $F$ output $0$ and $0$ when the input is $0$ and $1$ respectively, so they are grouped together. From here we can partition the groups by the same method as for a DFA.\pagebreak
 
 \section{Context Free Grammars}
+\subsection{An Example to Start}
 Let's start with simple english. Consider the sentence:\\
 
 The girl sees a dog.\\
@@ -526,6 +561,7 @@ These are called rewrite rules, or production rules, or grammar. They are our sy
 \item Lexical Items (Lexicon, Terminal Symbols)
 \end{itemize}
 
+\subsection{Grammar Rules}
 Grammar Rules can be used in two different ways:
 \begin{enumerate}
 \item Parse a given sentence into its constituents.
@@ -542,9 +578,9 @@ S &\implies NP\ VP\\
   &\implies Jack\ walks\ slowly
 \end{align*}
 
-\textbf{Context}:
+\subsection{Context}
 
-Def: We have some string $uAv$ where $u$ is a prefix of $A$, and $v$ is a suffix of $A$. $u$ and $v$ define the context, or environment of $A$.
+\textbf{Definition:} We have some string $uAv$ where $u$ is a prefix of $A$, and $v$ is a suffix of $A$. $u$ and $v$ define the context, or environment of $A$.
 
 $A$ (now without $u$ and $v$) is context-free. There is no prefix or suffix of $A$ which would establish a context for $A$.
 
@@ -619,4 +655,57 @@ The ``things'' which are most specific are ``done'' first. In other words, since
 \end{center}
 
 We can think of the compiler reading an expression as right recursive (but beware, not all compilers are right recursive. It is best to always use parentheses). By right recursion we mean that the reading of the expression will end up being right to left. To try and explain through text, you can look at the definition of $T$ above. Every factor is determined, and the term must be determined before the multiplication is carried out. This means in $a*b*c$ we have the factor $a$ ``waiting'' for the term $b*c$ to be determined before anything else happens.
+
+\subsection{Regular Grammars}
+
+Context free grammars that contain production rules only of the form:
+\begin{align*}
+A &\rightarrow aB\\
+A &\rightarrow \lambda
+\end{align*}
+are called \textbf{regular grammars}.
+
+Regular grammars form a subset of the context free grammars, which are exactly the regular languages. We can imagine a correspondence between regular grammars and NFAs:
+\begin{align*}
+A &\rightarrow aB \text{ corresponds to \ \ 
+\begin{tikzpicture}
+        [
+            > = stealth, % arrow head style
+            shorten > = 1pt, % don't touch arrow head to node
+            auto,
+            node distance = 2cm, % distance between nodes
+            semithick % line style
+        ]
+        \tikzstyle{every state}=[
+            draw = black,
+            thick,
+            fill = white,
+            minimum size = 4mm
+        ]
+        \node[state] (A) {$A$};
+        \node[state] (B) [right of=A] {$B$};
+        \path[->] (A) edge node {a} (B);
+    \end{tikzpicture}
+}\\
+A &\rightarrow \lambda \text{ corresponds to a final state $A$: \ \ 
+\begin{tikzpicture}
+        [
+            > = stealth, % arrow head style
+            shorten > = 1pt, % don't touch arrow head to node
+            auto,
+            node distance = 2cm, % distance between nodes
+            semithick % line style
+        ]
+        \tikzstyle{every state}=[
+            draw = black,
+            thick,
+            fill = white,
+            minimum size = 4mm
+        ]
+        \node[state,accepting] (A) {$A$};
+    \end{tikzpicture}
+} 
+\end{align*}
+
+
 \end{document}
