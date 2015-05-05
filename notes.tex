@@ -175,11 +175,11 @@ Here is an example of a state transition diagram.
         \path[->] (A) edge node {$D/b$} (C);
         \path[->] (B) edge node {$N/b$} (C);
         \path[->] (B) edge node {$D/b$} (D);
-        \path[->, bend right=10] (C) edge node {$N/b$} (D);
+        \path[->, swap] (C) edge node {$N/b$} (D);
         \path[->] (C) edge node {$D/b$} (E);
         \path[->] (D) edge node {$N/b$} (E);
         \path[->, bend left=90] (E) edge node {$J/j$} (A);
-        \path[->, bend right=90] (D) edge node {$G/g$} (A);
+        \path[->, bend right=90, swap] (D) edge node {$G/g$} (A);
 
     \end{tikzpicture}
 \end{minipage}
